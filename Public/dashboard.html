@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BikeYourFlight</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+</head>
+
+<body>
+      <!-- Include Header -->
+    <div id="header-placeholder"></div>
+
+ <section class="dashboard-container">
+ <!-- Container to center the form & limit max width -->
+    <div class="w-full max-w-4xl mx-auto px-4">
+     <form id="airline-form" class="bg-white p-10 rounded-xl shadow-xl">
+     <h3 class="text-3xl font-bold text-center text-gray-800 mb-8">Add a New Airline</h3>
+
+    <!-- Airline Info -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="airline-name" class="block text-gray-700 font-semibold mb-2">Airline Name</label>
+        <input type="text" id="airline-name" placeholder="e.g. Delta Airlines" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+      </div>
+
+      <div>
+        <label for="iata-code" class="block text-gray-700 font-semibold mb-2">IATA Code</label>
+        <input type="text" id="iata-code" placeholder="e.g. DL" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+      </div>
+
+      <div>
+        <label for="icao-code" class="block text-gray-700 font-semibold mb-2">ICAO Code</label>
+        <input type="text" id="icao-code" placeholder="e.g. DAL" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="bicycle-policy" class="block text-gray-700 font-semibold mb-2">Bicycle Policy Description</label>
+        <textarea id="bicycle-policy" placeholder="Describe the bicycle policy" rows="4" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition"></textarea>
+      </div>
+    </div>
+
+    <!-- Bicycle Size Restrictions -->
+    <h3 class="text-3xl font-bold text-center text-gray-800 mt-12 mb-8">Set Bicycle Size Restrictions</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="max-weight" class="block text-gray-700 font-semibold mb-2">Max Weight (kg)</label>
+        <input type="number" id="max-weight" placeholder="e.g. 30" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+      </div>
+
+      <div>
+        <label for="max-length" class="block text-gray-700 font-semibold mb-2">Max Length (cm)</label>
+        <input type="number" id="max-length" placeholder="e.g. 180" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+      </div>
+
+      <div>
+        <label for="max-width" class="block text-gray-700 font-semibold mb-2">Max Width (cm)</label>
+        <input type="number" id="max-width" placeholder="e.g. 70" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+      </div>
+
+      <div>
+        <label for="max-height" class="block text-gray-700 font-semibold mb-2">Max Height (cm)</label>
+        <input type="number" id="max-height" placeholder="e.g. 100" required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition" />
+      </div>
+    </div>
+
+       <!-- Submit Button -->
+    <button type="submit"
+      class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 mt-10 rounded-lg transition duration-300 shadow-md hover:shadow-lg">
+      ➕ Add Airline & Policy
+    </button>
+    </form>
+    <p id="response-message"></p>
+  </section>
+
+  <script>
+        // Load header dynamically
+        fetch("header.html")
+            .then((response) => response.text())
+            .then((headerHtml) => {
+                document.getElementById("header-placeholder").innerHTML = headerHtml;
+            })
+            .catch((error) => {
+                console.error("Error loading the header:", error);
+            });
+    </script>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
+
