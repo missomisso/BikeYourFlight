@@ -15,7 +15,9 @@ console.log("MONGODB_URI:", process.env.MONGODB_URI);
 app.use(cors());
 app.use(bodyParser.json()); // Parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
-app.use(express.static("public")); // Serve static files from 'public' directory
+
+// ✅ Serve static files first
+app.use(express.static("public"));
 
 // Route imports
 
