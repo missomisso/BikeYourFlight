@@ -69,7 +69,7 @@ async function updateAirline(id, data) {
 }
 
 async function getAirlineByName(name) {
-  return await db.collection("airlines").findOne({
+  return await db.airlines.findOne({
     AirlineName: { $regex: new RegExp(name, "i") }
   });
 }
