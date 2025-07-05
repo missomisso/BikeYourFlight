@@ -98,6 +98,7 @@ function fetchPolicy(event) {
 
   document.getElementById("result").innerHTML = `<p>Loading policy...</p>`;
 
+  console.log("Fetching policy for:", selectedAirline);
   fetch(`${API_BASE}/api/airlines/name/${encodeURIComponent(selectedAirline)}`)
     .then(response => response.json())
     .then(data => {
