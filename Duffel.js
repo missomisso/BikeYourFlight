@@ -1,4 +1,6 @@
+
 require("dotenv").config(); // Load environment variables
+const { db, connectDb } = require("./db");
 const express = require("express"); // Import Express
 const app = express(); // Initialize Express app
 const PORT = process.env.PORT || 3000; // Use environment variable or default to 3000
@@ -7,8 +9,32 @@ const cors = require("cors");
 const { Duffel } = require("@duffel/api"); // Duffel API library
 const { errorHandler } = require("./middlewares/errorMiddleware"); // Custom error handler
 const { authenticate } = require("./controllers/authController");
+console.log("MONGODB_URI:", process.env.MONGODB_URI);
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json()); // Parse JSON request bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
+app.use(express.static("public")); // Serve static files from 'public' directory
 
 // Route imports
+
+app.get("/", (req, res) => {
+  res.send("✅ Server is working!");
+});
+
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
+
+app.get("/api/test-insert-airline", async (req, res) => {
+  await db.airlines.insertOne({
+    AirlineName: "Debug Airline",
+    createdAt: new Date(),
+  });
+  res.send("✅ Airline inserted.");
+});
+
 const flightRoutes = require("./routes/flightRoutes"); // Flight routes
 const airlineRoutes = require("./routes/airlineRoutes"); // Airline routes
 const passengerRoutes = require("./routes/passengerRoutes"); // Passenger routes
@@ -16,16 +42,20 @@ const bicycleSizeRoutes = require("./routes/bicycleSizeRoutes"); // Bicycle size
 const authRoutes = require("./routes/authRoutes"); // Ensure correct path
 console.log("✅ Auth Routes Loaded: ", authRoutes);
 
+
+app.get("/api/test-insert", async (req, res) => {
+  await db.passengers.insertOne({
+    FullName: "Debug User",
+    createdAt: new Date()
+  });
+  res.send("Inserted test document.");
+});
+
+
 // Duffel API initialization
 const duffel = new Duffel({
   token: process.env.DUFFEL_ACCESS_TOKEN,
 });
-
-// Middleware
-app.use(cors());
-app.use(bodyParser.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
-app.use(express.static("public")); // Serve static files from 'public' directory
 
 // Routes
 app.use("/api/airlines", airlineRoutes); // Airline routes
@@ -48,6 +78,8 @@ app.get("/api/protected", authenticate, (req, res) => {
 app.use(errorHandler);
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Duffel API is running on http://localhost:${PORT}`);
+connectDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Duffel API is running on http://localhost:${PORT}`);
+  });
 });

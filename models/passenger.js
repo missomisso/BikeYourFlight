@@ -1,44 +1,43 @@
-const sql = require("mssql");
-const dbConfig = require("../dbConfig");
+const { ObjectId } = require("mongodb");
+const { db } = require("../db");
 
-class Passenger {
-  constructor(PassengerID, FullName, Email, PhoneNumber, AirlineID) {
-    this.PassengerID = PassengerID;
-    this.FullName = FullName;
-    this.Email = Email;
-    this.PhoneNumber = PhoneNumber;
-    this.AirlineID = AirlineID;
-  }
+// ✅ Create a new passenger
+async function createPassenger(data) {
+  const result = await db.collection("passengers").insertOne({
+    FullName: data.FullName,
+    Email: data.Email,
+    PhoneNumber: data.PhoneNumber,
+    AirlineID: data.AirlineID,
+    createdAt: new Date(),
+  });
 
-  static async createPassenger(data) {
-    const connection = await sql.connect(dbConfig);
-    const request = connection.request();
-    request.input("FullName", sql.NVarChar, data.FullName);
-    request.input("Email", sql.NVarChar, data.Email);
-    request.input("PhoneNumber", sql.NVarChar, data.PhoneNumber);
-    request.input("AirlineID", sql.Int, data.AirlineID);
-    const result = await request.query(`
-      INSERT INTO Passengers (FullName, Email, PhoneNumber, AirlineID)
-      VALUES (@FullName, @Email, @PhoneNumber, @AirlineID);
-      SELECT SCOPE_IDENTITY() AS PassengerID;
-    `);
-    connection.close();
-    return result.recordset[0].PassengerID;
-  }
-
-  static async getPassengerWithAirline(id) {
-    const connection = await sql.connect(dbConfig);
-    const request = connection.request();
-    request.input("id", sql.Int, id);
-    const result = await request.query(`
-      SELECT p.*, a.AirlineName, a.BicyclePolicy
-      FROM Passengers p
-      JOIN Airlines a ON p.AirlineID = a.AirlineID
-      WHERE p.PassengerID = @id
-    `);
-    connection.close();
-    return result.recordset[0];
-  }
+  return result.insertedId; // MongoDB _id
 }
 
-module.exports = Passenger;
+// ✅ Get a passenger with their airline info
+async function getPassengerWithAirline(id) {
+  // First: fetch passenger
+  const passenger = await db.collection("passengers").findOne({
+    _id: new ObjectId(id),
+  });
+
+  if (!passenger) {
+    return null;
+  }
+
+  // Second: fetch airline
+  const airline = await db.collection("airlines").findOne({
+    _id: new ObjectId(passenger.AirlineID),
+  });
+
+  return {
+    ...passenger,
+    AirlineName: airline ? airline.AirlineName : null,
+    BicyclePolicy: airline ? airline.BicyclePolicy : null,
+  };
+}
+
+module.exports = {
+  createPassenger,
+  getPassengerWithAirline,
+};
