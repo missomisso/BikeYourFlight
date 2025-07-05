@@ -31,7 +31,7 @@ function loadAirlines() {
         });
 }
 
-// ✅ Fetch Bicycle Policy
+/* // ✅ Fetch Bicycle Policy
 function fetchPolicy(event) {
     event.preventDefault();
     const selectedAirline = document.getElementById("airlineDropdown").value;
@@ -84,4 +84,43 @@ function fetchPolicy(event) {
             document.getElementById("result").innerHTML = 
                 `<p>Error fetching policy for ${selectedAirline}.</p>`;
         });
+} */
+
+
+function fetchPolicy(event) {
+  event.preventDefault();
+  const selectedAirline = document.getElementById("airlineDropdown").value;
+
+  if (!selectedAirline) {
+    alert("Please select an airline first!");
+    return;
+  }
+
+  document.getElementById("result").innerHTML = `<p>Loading policy...</p>`;
+
+  fetch(`${API_BASE}/api/airlines/name/${encodeURIComponent(selectedAirline)}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log("Policy Data:", data);
+
+      if (!data || !data.data) {
+        document.getElementById("result").innerHTML =
+          `<p>No policy found for ${selectedAirline}.</p>`;
+        return;
+      }
+
+      const policy = data.data.BicyclePolicy || "No policy provided.";
+
+      document.getElementById("result").innerHTML = `
+        <div class="policy-description">
+          <strong>Bicycle Policy for ${selectedAirline}:</strong>
+          <p>${policy}</p>
+        </div>
+      `;
+    })
+    .catch(error => {
+      console.error("Error fetching policy:", error);
+      document.getElementById("result").innerHTML =
+        `<p>Error fetching policy for ${selectedAirline}.</p>`;
+    });
 }

@@ -151,6 +151,24 @@ const createManyAirlines = async (req, res) => {
   }
 };
 
+// ✅ Get a single airline by name
+const getAirlineByName = async (req, res) => {
+  try {
+    const airlineName = req.params.name;
+    const airlineData = await airline.getAirlineByName(airlineName);
+
+    if (!airlineData) {
+      return res.status(404).json({ success: false, message: "Airline not found." });
+    }
+
+    res.status(200).json({ success: true, data: airlineData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error retrieving airline." });
+  }
+};
+
+
 module.exports = {
   getAllAirlines,
   getAirlineDetails,
@@ -159,5 +177,6 @@ module.exports = {
   getBicyclePolicyByAirlineId,
   deleteAirline,
   updateAirline,
-  createManyAirlines
+  createManyAirlines,
+  getAirlineByName
 };

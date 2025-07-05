@@ -21,7 +21,7 @@ app.use(express.static("public"));
 
 // Route imports
 
-/* app.get("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("✅ Server is working!");
 });
 
@@ -35,7 +35,7 @@ app.get("/api/test-insert-airline", async (req, res) => {
     createdAt: new Date(),
   });
   res.send("✅ Airline inserted.");
-}); */
+}); 
 
 const flightRoutes = require("./routes/flightRoutes"); // Flight routes
 const airlineRoutes = require("./routes/airlineRoutes"); // Airline routes

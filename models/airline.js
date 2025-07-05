@@ -68,6 +68,12 @@ async function updateAirline(id, data) {
   return result.modifiedCount > 0;
 }
 
+async function getAirlineByName(name) {
+  return await db.collection("airlines").findOne({
+    AirlineName: { $regex: new RegExp(name, "i") }
+  });
+}
+
 module.exports = {
   getAllAirlines,
   getAirlineById,
@@ -75,5 +81,6 @@ module.exports = {
   getBicyclePolicyByAirlineName,
   getBicyclePolicyByAirlineId,
   deleteAirline,
-  updateAirline
+  updateAirline,
+  getAirlineByName
 };
